@@ -1,26 +1,29 @@
 package com.siwoo.p14000
 
 fun main(args: Array<String>) {
-    val S = readLine()?.toInt() ?: 0
     data class Clip(val emo: Int, val clip: Int) {
-        fun next(S: Int, p: (Clip) -> Boolean): List<Clip> {
-            val list = mutableListOf(Clip(emo, emo))
-            if (emo-1 >= 0)
-                list.add(Clip(emo-1, clip))
-            if (emo+clip <= S)
-                list.add(Clip(emo + clip, emo))
-            return list.filter(p)
+        fun next(): List<Clip> {
+            var list = listOf(Clip(emo, emo))
+            if (clip != 0)
+                list = list + Clip(emo+clip, clip)
+            if (emo > 0)
+                list = list + Clip(emo-1, clip)
+            return list
         }
     }
+    val K = readLine()?.toInt() ?: 0
     val q = mutableListOf(Clip(1, 0))
-    val distance = mutableMapOf(Clip(1, 0) to 0)
+    val distance = mutableMapOf(q.first() to 0)
     while (q.isNotEmpty()) {
-        val p = q.removeAt(0)
-        if (p.emo == S) {
-            println(distance[p])
+        val v = q.removeAt(0)
+        if (v.emo == K) {
+            println(distance[v])
             return
         }
-        p.next(S){ !distance.contains(it) }
-                .forEach { q.add(it); distance[it] = distance[p]!! + 1}
+        v.next().filter { !distance.contains(it) }
+                .forEach { 
+            distance[it] = distance[v]!! + 1
+            q.add(it)
+        }
     }
 }
