@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
                     A[r][c]
                 if (v == 'T')
                     tails++
-            }햣
+            }
             cnt += tails.coerceAtMost(A[r].size - tails)
         }
         return cnt
